@@ -2,13 +2,44 @@ h1 Twitter Great RSS
 div
 
   - if @user
+    - hash = @user.url_id_hash
+    - home = "#{root_url}feed/home?url_id_hash=#{hash}"
     div You can generate RSS with URL like:
     ul
-      li #{root_url}feed/home?url_id_hash=#{@user.url_id_hash}
-      li #{root_url}feed/user?name=USERNAME&url_id_hash=#{@user.url_id_hash}
-      li #{root_url}feed/user/fav?name=USERNAME&url_id_hash=#{@user.url_id_hash}
-      li #{root_url}feed/list?name=USERNAME&slug=LISTNAME&url_id_hash=#{@user.url_id_hash}
-      li #{root_url}feed/search?q=KEYWORD&url_id_hash=#{@user.url_id_hash}
+      li
+        | timeline tweets
+        br
+        = link_to( home, home, id: 'home', target: '_blank' )
+      li
+        | user tweets
+        br
+        = link_to( '', '', id: 'user', target: '_blank' )
+        br
+        | USERNAME: 
+        = text_field_tag( 'user[name]' )
+      li
+        | user favorites
+        br
+        = link_to( '', '', id: 'fav', target: '_blank' )
+        br
+        | USERNAME: 
+        = text_field_tag( 'fav[name]' )
+      li
+        | list tweets
+        br
+        = link_to( '', '', id: 'list', target: '_blank' )
+        br
+        | USERNAME: 
+        = text_field_tag( 'list[name]' )
+        |  LISTNAME: 
+        = text_field_tag( 'list[slug]' )
+      li
+        | search result tweets
+        br
+        = link_to( '', '', id: 'search', target: '_blank' )
+        br
+        | KEYWORD: 
+        = text_field_tag( 'search[q]' )
     div
       | Bookmarklet is also available. → 
       a href=bookmarklet_escape(render(partial: 'bookmarklet', formats: ['js']))
@@ -17,7 +48,7 @@ div
       b Notice: If using Firefox, you should access `about:config` and `secuirty.csp.enable` to be `false`
     br
     div
-      == link_to "Logout", controller: "auth", action: "logout"
+      = link_to "Logout", controller: "auth", action: "logout"
 
   - else
     div Generate RSS for:
@@ -28,9 +59,46 @@ div
       li list tweets
       li search result tweets
     div
-      == link_to "Sign in with twitter", controller: "auth", action: "auth"
+      = link_to "Sign in with twitter", controller: "auth", action: "auth"
 
   br
   div
     | Code is available on 
-    a href="http://github.com/yayugu/twitter-great-rss" GitHub
+    = link_to( 'GitHub', 'https://github.com/yayugu/twitter-great-rss' )
+
+javascript:
+  $( function() {
+    $( "#user_name" ).keyup( function() {
+      update( "#user", "#{root_url}feed/user", "name=" + encodeURIComponent( $( this ).val() ) ) ;
+    } ) ;
+    $( "#fav_name" ).keyup( function() {
+      update( "#fav", "#{root_url}feed/user/fav", "name=" + encodeURIComponent( $( this ).val() ) ) ;
+    } ) ;
+    $( "#list_name" ).keyup( update_list ) ;
+    $( "#list_slug" ).keyup( update_list ) ;
+    $( "#search_q" ).keyup( function() {
+      update( "#search", "#{root_url}feed/search", "q=" + encodeURIComponent( $( this ).val() ) ) ;
+    } ) ;
+
+    update( "#user", "#{root_url}feed/user", "name=USERNAME" ) ;
+    update( "#fav", "#{root_url}feed/user/fav", "name=USERNAME" ) ;
+    update_list_sub( "USERNAME", "LISTNAME" ) ;
+    update( "#search", "#{root_url}feed/search", "q=KEYWORD" ) ;
+  } ) ;
+
+  function update( target, url, param ) {
+    param = param + "&url_id_hash=#{hash}" ;
+    url += "?" + param ;
+    $( target ).attr( 'href', url ) ;
+    $( target ).text( url ) ;
+  }
+
+  function update_list() {
+    update_list_sub( $( "#list_name" ).val(), $( "#list_slug" ).val() ) ;
+  }
+
+  function update_list_sub( name, slug ) {
+    param = "name=" + encodeURIComponent( name ) + "&slug=" + encodeURIComponent( slug ) ;
+    update( "#list", "#{root_url}feed/list", param ) ;
+  }
+
