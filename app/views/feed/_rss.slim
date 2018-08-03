@@ -12,7 +12,7 @@ rss[version='2.0'
         link= @link
     - @tweets.each do |tweet|
       item
-        title= tweet.screen_name
+        title= "#{tweet.name} (@#{tweet.screen_name})"
         link= tweet.url
         description= tweet.description
         author= tweet.author
