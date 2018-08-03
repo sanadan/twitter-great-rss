@@ -4,7 +4,13 @@ class FeedController < ApplicationController
   before_action :prepare_twitter_client
 
   def home
-    res = @client.home(TWEET_COUNT)
+    begin
+      res = @client.home(TWEET_COUNT)
+    rescue Net::HTTPServerException => e
+      render( plain: e.message )
+      return
+    end
+
     render_error and return if res.error
 
     @tweets = Tweet.tweets_from_hash_list(res.body)
@@ -12,7 +18,12 @@ class FeedController < ApplicationController
   end
 
   def user
-    res = @client.user(params[:name], TWEET_COUNT)
+    begin
+      res = @client.user(params[:name], TWEET_COUNT)
+    rescue Net::HTTPServerException => e
+      render( plain: e.message )
+      return
+    end
     render_error and return if res.error
 
     @image_url = res.body.first['user']['profile_image_url']
@@ -22,7 +33,12 @@ class FeedController < ApplicationController
   end
 
   def user_fav
-    res = @client.user_fav(params[:name], TWEET_COUNT)
+    begin
+      res = @client.user_fav(params[:name], TWEET_COUNT)
+    rescue Net::HTTPServerException => e
+      render( plain: e.message )
+      return
+    end
     render_error and return if res.error
 
     @name = "#{params[:name]}"
@@ -31,7 +47,12 @@ class FeedController < ApplicationController
   end
 
   def list
-    res = @client.list(params[:name], params[:slug], TWEET_COUNT)
+    begin
+      res = @client.list(params[:name], params[:slug], TWEET_COUNT)
+    rescue Net::HTTPServerException => e
+      render( plain: e.message )
+      return
+    end
     render_error and return if res.error
 
     @name = params[:name]
@@ -41,7 +62,12 @@ class FeedController < ApplicationController
   end
 
   def search
-    res = @client.search(params[:q], TWEET_COUNT)
+    begin
+      res = @client.search(params[:q], TWEET_COUNT)
+    rescue Net::HTTPServerException => e
+      render( plain: e.message )
+      return
+    end
     render_error and return if res.error
 
     @query = params[:q]
