@@ -33,4 +33,9 @@ class Tweet
   def author
     @hash['source'].gsub(/<\/?[^>]*>/, "")
   end
+
+  def name
+    @hash['user']['name']
+  end
 end
+
