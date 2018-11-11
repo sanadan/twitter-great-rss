@@ -63,7 +63,7 @@ class MarkupTweet
     def markup_quote(text, tweet)
       return text unless tweet['quoted_status']
       quoted_status = tweet['quoted_status']
-      "#{text}<blockquote>#{MarkupTweet::markup_author(quoted_status['text'], quoted_status)}</blockquote>"
+      "#{text}<blockquote>#{MarkupTweet::markup_author(quoted_status['full_text'], quoted_status)}</blockquote>"
     end
 
     def markup_author(text, tweet)
