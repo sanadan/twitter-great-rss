@@ -1,7 +1,7 @@
 class MarkupTweet
   class << self
     def markup_tweet(tweet)
-      text = tweet['text']
+      text = tweet['full_text']
       entities = tweet['entities']
       extended_entities = tweet['extended_entities']
       text = MarkupTweet::markup_media(text, entities, extended_entities)
