@@ -2,7 +2,7 @@ class MarkupTweet
   class << self
     def markup_tweet(tweet)
       retweet = tweet['retweeted_status']
-      text = retweet ? "RT @#{retweet['user']['screen_name']}<br>#{retweet['full_text']}" : tweet['full_text']
+      text = retweet ? "RT @#{retweet['user']['screen_name']} #{retweet['full_text']}" : tweet['full_text']
       entities = tweet['entities']
       extended_entities = tweet['extended_entities']
       text = MarkupTweet::markup_media(text, entities, extended_entities)
