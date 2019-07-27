@@ -19,6 +19,10 @@ class Tweet
   end
 
   def url
+    retweet = @hash['retweeted_status']
+    if retweet
+      return "https://twitter.com/#{retweet['user']['screen_name']}/status/#{retweet['id']}"
+    end
     "https://twitter.com/#{screen_name}/status/#{@hash['id']}"
   end
 

@@ -58,6 +58,7 @@ class FeedController < ApplicationController
     @name = params[:name]
     @slug = params[:slug]
     @tweets = Tweet.tweets_from_hash_list(res.body)
+    logger.debug(JSON.pretty_generate(@tweets.as_json))
     render_rss
   end
 
