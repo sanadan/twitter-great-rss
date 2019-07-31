@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'oauth'
 require 'oauth_twitter'
 require 'uri'
@@ -44,11 +46,11 @@ class TwitterClient
   end
 
   def list_sub_url(name, slug, count)
-    "/lists/statuses.json?slug=#{slug}&owner_screen_name=#{name}&include_entities=true&count=#{count}&include_rts=true&tweet_mode=extended"
+    "/lists/statuses.json?slug=#{URI.encode_www_form_component(slug)}&owner_screen_name=#{name}&include_entities=true&count=#{count}&include_rts=true&tweet_mode=extended"
   end
 
   def search_sub_url(query, count)
-    "/search/tweets.json?q=#{URI::encode_www_form_component(query)}&include_entities=true&count=#{count}&tweet_mode=extended"
+    "/search/tweets.json?q=#{URI.encode_www_form_component(query)}&include_entities=true&count=#{count}&tweet_mode=extended"
   end
 
   def get_and_json_parse(sub_url)
