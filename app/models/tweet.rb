@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Tweet
   class << self
     def tweets_from_hash_list(hash_list)
@@ -19,10 +21,12 @@ class Tweet
   end
 
   def url
+=begin
     retweet = @hash['retweeted_status']
     if retweet
       return "https://twitter.com/#{retweet['user']['screen_name']}/status/#{retweet['id']}"
     end
+=end
     "https://twitter.com/#{screen_name}/status/#{@hash['id']}"
   end
 

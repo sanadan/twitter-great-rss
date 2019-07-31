@@ -1,16 +1,25 @@
+# frozen_string_literal: true
+
 class MarkupTweet
   class << self
     def markup_tweet(tweet)
       retweet = tweet['retweeted_status']
-      text = retweet ? "RT @#{retweet['user']['screen_name']} #{retweet['full_text']}" : tweet['full_text']
+      text = ''
+      if retweet
+        screen_name = retweet['user']['screen_name']
+        url = "https://twitter.com/#{screen_name}/status/#{retweet['id']}"
+        text += "<a href=\"#{url}\">RT</a> @#{screen_name} #{retweet['full_text']}"
+      else
+        text += tweet['full_text']
+      end
       entities = tweet['entities']
       extended_entities = tweet['extended_entities']
-      text = MarkupTweet::markup_media(text, entities, extended_entities)
-      text = MarkupTweet::markup_urls(text, tweet)
-      text = MarkupTweet::markup_user_mentions(text, entities)
-      text = MarkupTweet::markup_hashtags(text, entities)
-      text = MarkupTweet::markup_quote(text, tweet)
-      text = MarkupTweet::markup_author(text, tweet)
+      text = MarkupTweet.markup_media(text, entities, extended_entities)
+      text = MarkupTweet.markup_urls(text, tweet)
+      text = MarkupTweet.markup_user_mentions(text, entities)
+      text = MarkupTweet.markup_hashtags(text, entities)
+      text = MarkupTweet.markup_quote(text, tweet)
+      text = MarkupTweet.markup_author(text, tweet)
       text
     end
 
