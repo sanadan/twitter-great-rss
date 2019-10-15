@@ -8,7 +8,7 @@ class MarkupTweet
       if retweet
         screen_name = retweet['user']['screen_name']
         url = "https://twitter.com/#{screen_name}/status/#{retweet['id']}"
-        text += "<a href=\"#{url}\">RT</a> @#{screen_name} #{retweet['full_text']}"
+        text += "<a href=\"#{url}\">Retweet</a>/@#{screen_name} #{retweet['full_text']}"
       else
         text += tweet['full_text']
       end
@@ -27,6 +27,7 @@ class MarkupTweet
     def markup_media(text, entities, extended_entities)
       en = extended_entities && extended_entities['media'] ? extended_entities : entities
       return text unless en['media']
+      text = 'Media/' + text
       en['media'].each do |media|
         next unless media['type'] == 'photo'
         text.gsub!(media['url'], '')
